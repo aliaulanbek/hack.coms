@@ -1,4 +1,6 @@
 <script setup>
+import HelloWorld from './components/HelloWorld.vue'
+import GoogleSignIn from './components/GoogleSignIn.vue';
 import ChatArea from './components/ChatArea.vue';
 import BrowseArea from './components/BrowseArea.vue';
 </script>
@@ -8,6 +10,8 @@ import BrowseArea from './components/BrowseArea.vue';
     <ChatArea class="chat-area"></ChatArea>
     <BrowseArea class="browse-area"></BrowseArea>
   </div>
+  <HelloWorld msg="Vite + Vue" />
+  <GoogleSignIn />
 </template>
 
 <style scoped>
