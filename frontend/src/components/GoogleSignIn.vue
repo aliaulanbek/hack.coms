@@ -1,27 +1,19 @@
-<template>
-    <div>
-      <div v-if="!user"> <!-- Show sign-in button if user is null -->
-        <div id="google-signin-button"></div>
-      </div>
-      <div v-else> <!-- Show user info if user is not null -->
-        <p>Welcome, {{ user.name }}!</p>
-        <img v-if="user.imageUrl" :src="user.imageUrl" alt="User Image" /> <!-- Only show image if imageUrl is present -->
-        <button @click="signOut">Sign Out</button>
-      </div>
-    </div>
-  </template>
-  
-  
+
 <script setup>
     import { ref, onMounted } from 'vue';
     import { watch } from 'vue';
 
 
     let user = ref(null);
+    let signedIn = ref(false);
 
 
     watch(user, (newValue) => {
         console.log('User changed:', newValue);
+    });
+
+    watch(signedIn, (newValue) => {
+        console.log('SignedIn changed:', newValue);
     });
     // Function to handle the Google sign-in success event
     function handleCredentialResponse(response) {
@@ -31,6 +23,7 @@
             email: userObject.email,
             imageUrl: userObject.picture,
         };
+        signedIn.value = true;
     }
 
     // Function to parse the JWT token
@@ -48,6 +41,7 @@
         if(user.value){
             google.accounts.id.revoke(user.value.email, () => {
             user.value = null; // Reset user to null to show sign-in button again
+            signedIn.value = false;
             console.log('User signed out.');
             console.log(user);
         });
@@ -78,9 +72,22 @@
         script.onload = initializeGoogleSignIn;
         document.head.appendChild(script);
     });
-    </script>
+</script>
 
-    <style scoped>
+<template>
+    <div>
+      <div v-if="!user"> <!-- Show sign-in button if user is null -->
+        <div id="google-signin-button"></div>
+      </div>
+      <div v-else> <!-- Show user info if user is not null -->
+        <p>Welcome, {{ user.name }}!</p>
+        <img v-if="user.imageUrl" :src="user.imageUrl" alt="User Image" /> <!-- Only show image if imageUrl is present -->
+        <button @click="signOut">Sign Out</button>
+      </div>
+    </div>
+</template>
+
+<style scoped>
     /* Customize the button appearance if needed */
 </style>
   

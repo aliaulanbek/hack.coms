@@ -1,12 +1,13 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
 import GoogleSignIn from './components/GoogleSignIn.vue';
 import ChatArea from './components/ChatArea.vue';
 import BrowseArea from './components/BrowseArea.vue';
 </script>
 
 <template>
+  <GoogleSignIn></GoogleSignIn>
   <div class="two-column">
+    
     <ChatArea class="chat-area"></ChatArea>
     <BrowseArea class="browse-area"></BrowseArea>
   </div>
