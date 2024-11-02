@@ -1,12 +1,22 @@
 <script setup>
 import ChatArea from './components/ChatArea.vue';
 import BrowseArea from './components/BrowseArea.vue';
+import MessageArea from './components/MessageArea.vue';
+
+import { ref } from 'vue';
+
+const isMessaging = ref(true);
+
+function toggleMessage() {
+  isMessaging.value = !isMessaging.value;
+}
 </script>
 
 <template>
   <div class="two-column">
-    <ChatArea class="chat-area"></ChatArea>
-    <BrowseArea class="browse-area"></BrowseArea>
+    <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
+    <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
+    <BrowseArea @toggle-event="toggleMessage" v-if="!isMessaging" class="browse-area"></BrowseArea>
   </div>
 </template>
 

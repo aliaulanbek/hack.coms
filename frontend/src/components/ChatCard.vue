@@ -9,7 +9,7 @@ export default {
 <template>
 <div>
     <button>
-        <h1>{{ name }}</h1>
+        <p>{{ name }}</p>
     </button>
 </div>
 </template>
@@ -17,6 +17,7 @@ export default {
 <style scoped>
 button {
     width: 100%;
+    height: 15vh;
     border-radius: 0px;
 }
 </style>
