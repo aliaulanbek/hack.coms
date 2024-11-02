@@ -20,6 +20,5 @@ import ChatCard from './ChatCard.vue';
 .scrollable {
     max-height: 80vh;
     overflow-y: auto;
-    border: 1px solid red;
 }
 </style>

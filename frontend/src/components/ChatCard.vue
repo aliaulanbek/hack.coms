@@ -17,5 +17,6 @@ export default {
 <style scoped>
 button {
     width: 100%;
+    border-radius: 0px;
 }
 </style>
