@@ -1,15 +1,22 @@
 <template>
-  <div>
+  <div class="everything">
     <nav class="navbar">
         <div class="brand">Mentor Database</div>
       
         <div class="nav-links">
             <a href="#students">Students</a>
+            <a>|</a>
             <a href="#alumni">Alumni</a>
+            <a>|</a>
             <a href="#professionals">Professionals</a>
         </div>
     </nav>
+
+    <div class="container">
+    </div>
+
   </div>
+
 </template>
 
 <script setup>
@@ -17,10 +24,15 @@
 </script>
 
 <style scoped>
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.everything {
+  border: 1px solid red;
 }
 
 .navbar {
@@ -42,5 +54,9 @@ body {
 }
 .navbar .nav-links a:hover {
     color: #ddd;
+}
+
+.container {
+  border: 1px solid #ddd;
 }
 </style>

@@ -15,7 +15,8 @@ import BrowseArea from './components/BrowseArea.vue';
   display: flex;
   gap: 20px;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  margin: auto;
 }
 
 .chat-area {
