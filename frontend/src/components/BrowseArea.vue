@@ -128,8 +128,9 @@
 
   const chooseDb = (value) => {
     database.value = value;
-    console.log("mentors: ", filteredMentors.value);
-    
+    getMentors().then((data) => {
+      console.log("called get mentors: ", data);
+    })
   }
 
   // Function to retrieve all users with role "mentor"
