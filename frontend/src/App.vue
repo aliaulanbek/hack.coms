@@ -12,7 +12,6 @@ import BrowseArea from './components/BrowseArea.vue';
     <BrowseArea class="browse-area"></BrowseArea>
   </div>
   <HelloWorld msg="Vite + Vue" />
-  <GoogleSignIn />
 </template>
 
 <style scoped>
