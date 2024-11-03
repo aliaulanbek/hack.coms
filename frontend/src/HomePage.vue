@@ -7,7 +7,7 @@ import Profile from './components/Profile.vue';
 
 import { ref } from 'vue';
 
-const isEditProfile = ref(true);
+const isEditProfile = ref(false);
 
 const isMessaging = ref(false);
 const currChat = ref('');
