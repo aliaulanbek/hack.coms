@@ -7,6 +7,7 @@ import MessageArea from './components/MessageArea.vue';
 import { ref } from 'vue';
 
 const isMessaging = ref(true);
+const signedIn = ref(false);
 
 function toggleMessage() {
   isMessaging.value = !isMessaging.value;
@@ -14,14 +15,14 @@ function toggleMessage() {
 </script>
 
 <template>
-  <GoogleSignIn></GoogleSignIn>
-  <div class="two-column">
+  <div v-if="signedIn" class="two-column">
     <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
     <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
-    <BrowseArea @toggle-event="toggleMessage" v-if="!isMessaging" class="browse-area"></BrowseArea>
+    <BrowseArea @toggle-event="toggleMessage" v-else class="browse-area"></BrowseArea>
   </div>
-  <HelloWorld msg="Vite + Vue" />
-  <GoogleSignIn />
+  <div v-else>
+    <h1>Sign in here</h1>
+  </div>
 </template>
 
 <style scoped>
