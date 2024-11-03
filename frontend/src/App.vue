@@ -1,16 +1,23 @@
 <script setup>
-import GoogleSignIn from './components/GoogleSignIn.vue';
+
 import ChatArea from './components/ChatArea.vue';
 import BrowseArea from './components/BrowseArea.vue';
 import MessageArea from './components/MessageArea.vue';
+import SignInPage from './components/SignInPage.vue';
 
 import { ref } from 'vue';
 
 const isMessaging = ref(true);
-const signedIn = ref(false);
+let signedIn = ref(false);
+let currentUser = ref(null)
 
 function toggleMessage() {
   isMessaging.value = !isMessaging.value;
+}
+
+function signIn(user) {
+  currentUser.value = user;
+  signedIn.value = true;
 }
 </script>
 
@@ -21,7 +28,7 @@ function toggleMessage() {
     <BrowseArea @toggle-event="toggleMessage" v-else class="browse-area"></BrowseArea>
   </div>
   <div v-else>
-    <h1>Sign in here</h1>
+    <SignInPage @signin-event="signIn"></SignInPage>
   </div>
 </template>
 
