@@ -14,9 +14,11 @@ const currChat = ref('');
 
 function toggleMessage(chat) {
   currChat.value = chat;
-  isMessaging.value = !isMessaging.value;
-  console.log(isMessaging);
-  console.log(currChat);
+  if (!chat) {
+    isMessaging.value = !isMessaging.value;
+  } else {
+    isMessaging.value = true;
+  }
 }
 
 function toggleEditProfile() {
