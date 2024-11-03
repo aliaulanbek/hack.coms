@@ -7,7 +7,7 @@ import Profile from './components/Profile.vue';
 
 import { ref } from 'vue';
 
-const isEditProfile = ref(false);
+const isEditProfile = ref(true);
 
 const isMessaging = ref(true);
 
@@ -15,17 +15,22 @@ function toggleMessage() {
   isMessaging.value = !isMessaging.value;
   console.log(isMessaging);
 }
+
+function toggleEditProfile() {
+  isEditProfile.value = !isEditProfile.value
+}
 </script>
 
 <template>
+  <div class="container">
     <div>
         <nav class="navbar">
             <div class="brand">ALANA.CONNECT</div>
-            <div class="nav-options">
+            <div class="nav-options" v-if="!isEditProfile">
                 <button @click="toggleEditProfile">Edit Profile</button>
             </div>
         </nav>
-        <div class="two-column">
+        <div class="two-column" v-if="!isEditProfile" >
             <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
             <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
             <BrowseArea @toggle-event="toggleMessage" v-else-if="!isMessaging" class="browse-area"></BrowseArea>
@@ -33,8 +38,9 @@ function toggleMessage() {
     </div>
 
     <div v-if="isEditProfile">
-        <EditProfile></EditProfile>
+        <EditProfile :toggleProfile="toggleEditProfile"></EditProfile>
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -52,6 +58,8 @@ function toggleMessage() {
 
 .browse-area {
   flex: 3;
+  /* border: 2px solid red;;
+ */
 }
 .navbar {
   display: flex;

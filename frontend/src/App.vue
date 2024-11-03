@@ -18,6 +18,7 @@ function signIn(user) {
     <SignInPage @signin-event="signIn"></SignInPage>
   </div>
   <div v-else>
+    <!-- pass in user -->
     <HomePage></HomePage>
   </div>
 </template>
