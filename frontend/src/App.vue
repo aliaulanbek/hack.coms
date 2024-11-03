@@ -15,6 +15,7 @@ let currentUser = ref(null);
 
 function toggleMessage() {
   isMessaging.value = !isMessaging.value;
+  console.log(isMessaging);
 }
 
 function signIn(user) {
@@ -39,9 +40,8 @@ function signIn(user) {
       <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
       <BrowseArea @toggle-event="toggleMessage" v-else-if="!isMessaging" class="browse-area"></BrowseArea>
     </div>
-
   </div>
-  <div v-else-if="isEdit">
+  <div v-else>
     <EditProfile></EditProfile>
   </div>
   <div v-else>
