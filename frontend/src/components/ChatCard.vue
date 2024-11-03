@@ -1,14 +1,21 @@
-<script>
-export default {
-    props: {
-        name: String
-    }
+<script setup>
+import { defineEmits } from 'vue';
+
+const props = defineProps({
+    name: String,
+})
+
+const emit = defineEmits(['open-message']);
+
+function openMessage() {
+    console.log(props.name);
+    emit('open-message', props.name);
 }
 </script>
 
 <template>
 <div>
-    <button>
+    <button @click="openMessage">
         <p>{{ name }}</p>
     </button>
 </div>

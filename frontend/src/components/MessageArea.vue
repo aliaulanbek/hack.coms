@@ -1,33 +1,55 @@
-<script>
-export default {
-    data() {
-        return {
-            name: 'Person A',
-            messages: ['hi', 'hi', 'hi'],
-        }
-    },
+<script setup>
+import { defineEmits, defineProps, onMounted, ref } from 'vue';
+import { database, set, get, ref as fireRef, onValue } from '../firebase';
 
-    methods: {
-        closeMessage() {
-            console.log('hi');
-            this.$emit('toggle-event');
-        }
-    }
+const props = defineProps({
+    chat: String,
+    email: String,
+});
+
+const emit = defineEmits(['toggle-event']);
+
+function closeMessage() {
+    emit('toggle-event');
 }
+
+const messages = ref([]);
+const recipient = ref('');
+
+function getMessages() {
+    const messagesRef = fireRef(database, `messages/${props.chat}`);
+
+    onValue(messagesRef, (snapshot) => {
+        const messageData = snapshot.val();
+        if (messageData) {
+            messages.value = messageData.messages;
+            recipient.value = messageData.participants[0] == props.email.replaceAll('_', '.') ? messageData.participants[1] : messageData.participants[0];
+        } else {
+            messages.value = [];
+        }
+    });
+}
+
+onMounted(() => {
+    getMessages();
+});
+
 </script>
 
 <template>
 <div>
     <nav class="navbar">
-        <div class="brand">{{ name }}</div>
+        <div class="brand">{{ recipient }}</div>
         
         <div class="nav-links">
             <button @click="closeMessage">Close</button>
         </div>
     </nav>
-    <ul>
-        <li v-for="message in messages">{{ message }}</li>
-    </ul>
+    <div>
+        <ul>
+            <li v-for="message in messages">{{ message.content }}</li>
+        </ul>
+    </div>
 </div>
 </template>
 

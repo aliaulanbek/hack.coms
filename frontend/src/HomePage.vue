@@ -10,10 +10,13 @@ import { ref } from 'vue';
 const isEditProfile = ref(false);
 
 const isMessaging = ref(false);
+const currChat = ref('');
 
-function toggleMessage() {
+function toggleMessage(chat) {
+  currChat.value = chat;
   isMessaging.value = !isMessaging.value;
   console.log(isMessaging);
+  console.log(currChat);
 }
 
 function toggleEditProfile() {
@@ -35,8 +38,8 @@ const props = defineProps({
             </div>
         </nav>
         <div class="two-column" v-if="!isEditProfile" >
-            <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
-            <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
+            <ChatArea @toggle-event="toggleMessage" class="chat-area" :user="user" @open-message="toggleMessage"></ChatArea>
+            <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area" :chat="currChat" :email="user.email"></MessageArea>
             <BrowseArea @toggle-event="toggleMessage" v-else-if="!isMessaging" class="browse-area"></BrowseArea>
         </div>
     </div>
