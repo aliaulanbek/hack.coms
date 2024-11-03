@@ -19,13 +19,17 @@ function toggleMessage() {
 function toggleEditProfile() {
   isEditProfile.value = !isEditProfile.value
 }
+
+const props = defineProps({
+  user: Object,
+});
 </script>
 
 <template>
   <div class="container">
     <div>
         <nav class="navbar">
-            <div class="brand">ALANA.CONNECT</div>
+            <div class="brand">ALANA.CONNECT | Welcome, {{ user.name }}</div>
             <div class="nav-options" v-if="!isEditProfile">
                 <button @click="toggleEditProfile">Edit Profile</button>
             </div>

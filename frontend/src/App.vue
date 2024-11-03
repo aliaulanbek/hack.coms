@@ -39,7 +39,7 @@ async function signIn(user) {
   </div>
   <div v-else>
     <!-- pass in user -->
-    <HomePage></HomePage>
+    <HomePage :user="currentUser"></HomePage>
   </div>
 </template>
 
