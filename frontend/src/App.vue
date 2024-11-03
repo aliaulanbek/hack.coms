@@ -11,7 +11,7 @@ import EditProfile from './components/EditProfile.vue';
 
 const isMessaging = ref(true);
 let signedIn = ref(false);
-let currentUser = ref(null)
+let currentUser = ref(null);
 
 function toggleMessage() {
   isMessaging.value = !isMessaging.value;
@@ -24,16 +24,22 @@ function signIn(user) {
 </script>
 
 <template>
-  <nav class="navbar">
+  <div v-if="!signedIn">
+    <SignInPage @signin-event="signIn"></SignInPage>
+  </div>
+  <div v-else-if="!isEdit">
+    <nav class="navbar">
       <div class="brand">ALANA.CONNECT</div>
       <div class="nav-options">
         <button @click="toggleEditProfile">Edit Profile</button>
       </div>
-  </nav>
-  <div v-if="!isEdit" class="two-column">
-    <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
-    <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
-    <BrowseArea @toggle-event="toggleMessage" v-else-if="!isMessaging" class="browse-area"></BrowseArea>
+    </nav>
+    <div class="two-column">
+      <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
+      <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
+      <BrowseArea @toggle-event="toggleMessage" v-else-if="!isMessaging" class="browse-area"></BrowseArea>
+    </div>
+
   </div>
   <div v-else-if="isEdit">
     <EditProfile></EditProfile>
