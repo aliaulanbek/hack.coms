@@ -24,6 +24,13 @@
           </select>
         </div>
 
+        <div class="filter-item">
+          <label for="demographic">Demographic</label>
+          <select v-model="demographic" placeholder="Select">
+            <option v-for="option in demographics" :value="option">{{ option }}</option>
+          </select>
+        </div>
+
         <div class="filter-item" v-if="database==='student' || database === 'alumni'">
 
           <label for="colleges">Academic College</label>
@@ -40,7 +47,6 @@
         <div class="filter-item" v-if="database==='professional'">
           <label for="field">Field</label>
           <input  v-model="field" type="text" id="field" placeholder="Enter field" />
-          {{ name }}
         </div>
       </div>
 
@@ -50,9 +56,9 @@
       </div>
     </div>
 
-    
-
     <div class="box database">
+      <p>que</p>
+      <MentorList></MentorList>
     </div>
 
   </div>
@@ -61,16 +67,28 @@
 <script setup>
 
   import { ref } from 'vue';
+  import MentorList from './MentorList.vue';
   // filters:
   const name = ref("");
   const areaOfInterest = ref("");
   const college = ref("");
   const company = ref("");
   const field = ref("");
-  const filters = ref([name, areaOfInterest, college, company, field])
+  const demographic = ref("");
+  const filters = ref([name, areaOfInterest, college, company, field, demographic])
 
   const areasOfInterest = ref(["Academic Development", "Career Development", "Mock Interview", "Resume Review", "Personal Experiences"])
   const database = ref("student");
+  const demographics = ref([
+    "African American / Black",
+    "Hispanic / Latino",
+    "Asian / Asian American",
+    "Native American / Indigenous",
+    "Middle Eastern / North African",
+    "Pacific Islander",
+    "Multiracial",
+    "Other (with a field to specify)"
+  ]);
   const colleges = ref([
     "College of Art and Design",
     "Saunders College of Business",
@@ -113,7 +131,6 @@ body {
   border-bottom: 1px solid rgb(81, 80, 80);
 }
 .everything {
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -143,7 +160,7 @@ body {
 .box {
   border: 1px solid #ddd;
   overflow: auto;
-  margin: 15px;
+  /* margin: 15px; */
   border-radius: 10px;
   background-color: #333;
 }
@@ -153,6 +170,7 @@ body {
 }
 
 .box.filter {
+  margin: 20px 0px;
   padding: 10px 15px; 
   text-align: left;
 }
@@ -182,7 +200,6 @@ input, select{
 }
 
 select {
-  /* background-color: red; */
   appearance: none;
 }
 input:focus {
