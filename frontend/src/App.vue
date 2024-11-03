@@ -9,9 +9,10 @@ import { ref } from 'vue';
 import Profile from './components/Profile.vue';
 import EditProfile from './components/EditProfile.vue';
 
-const isMessaging = ref(true);
+const isMessaging = ref(false);
 let signedIn = ref(false);
 let currentUser = ref(null);
+const isEditProfile = ref(true);
 
 function toggleMessage() {
   isMessaging.value = !isMessaging.value;
@@ -28,25 +29,25 @@ function signIn(user) {
   <div v-if="!signedIn">
     <SignInPage @signin-event="signIn"></SignInPage>
   </div>
-  <div v-else-if="!isEdit">
+  <div v-else-if="signedIn">
     <nav class="navbar">
       <div class="brand">ALANA.CONNECT</div>
       <div class="nav-options">
         <button @click="toggleEditProfile">Edit Profile</button>
       </div>
     </nav>
-    <div class="two-column">
+    <div class="two-column" v-if="isEditProfile">
       <ChatArea @toggle-event="toggleMessage" class="chat-area"></ChatArea>
       <MessageArea @toggle-event="toggleMessage" v-if="isMessaging" class="browse-area"></MessageArea>
       <BrowseArea @toggle-event="toggleMessage" v-else-if="!isMessaging" class="browse-area"></BrowseArea>
     </div>
   </div>
-  <div v-else>
+  <div v-if="!isEditProfile">
     <EditProfile></EditProfile>
   </div>
-  <div v-else>
+  <!-- <div v-else>
     <h1>Sign in here</h1>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
