@@ -1,5 +1,16 @@
 <script setup>
+import { ref, defineEmits } from 'vue';
 import ChatList from './ChatList.vue'
+
+const props = defineProps({
+    user: Object,
+});
+
+const emit = defineEmits(['open-message']);
+
+function openMessage(name) {
+    emit('open-message', name);
+}
 </script>
 
 <template>
@@ -12,7 +23,7 @@ import ChatList from './ChatList.vue'
             </div>
         </nav>
 
-        <ChatList></ChatList>
+        <ChatList :user="user" @open-message="openMessage"></ChatList>
     </div>
 </template>
 
