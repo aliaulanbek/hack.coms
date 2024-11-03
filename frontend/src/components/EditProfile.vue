@@ -1,3 +1,7 @@
+<script setup>
+
+</script>
+
 <template>
     <div class="profile-form">
       <h2>Profile Information</h2>
@@ -197,7 +201,7 @@
   
   <script setup>
     import { reactive, ref } from 'vue';
-    import { database } from '../firebase';
+    import { database, set, get, ref as fireRef } from '../firebase';
   
   const profile = reactive({
     name: '',
@@ -289,19 +293,20 @@
 
   const db = database;
 
-  function writeUserData(userId, name, email, role) {
-    set(ref(db, 'users/' + userId), {
-        username: name,
+  async function writeUserData(userId, name, email, role) {
+    const userRef = fireRef(db, `users/${email.replaceAll('.', '_')}`);
+
+    try {
+      await set(userRef, {
+        name: name,
         email: email,
-        role: role
-    })
-    .then(() => {
-        console.log("Data saved successfully!");
-    })
-    .catch((error) => {
-        console.error("Error saving data: ", error);
-    });
+        role: role,
+      });
+      console.log('created success!');
+    } catch(error) {
+      console.error(error);
     }
+  }
 
   </script>
   
