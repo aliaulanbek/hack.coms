@@ -12,26 +12,26 @@
             <h3>I am a...</h3>
             
             <div class="role-choice">
-                <select id="role" v-model="selectedRole" required>
+                <select id="role" v-model="profile.role" required>
                     <option disabled value="">Please select your role</option>
                     <option>Mentor</option>
                     <option>Mentee</option>
                 </select>
         
             </div>
-            <button @click="toggleNext" :disabled="selectedRole === ''">Next</button>
+            <button @click="toggleNext" :disabled="profile.role === ''">Next</button>
         </div>
-        <div v-else-if="selectedRole==='Mentee'">
-            <div class="form-group">
+        <div v-else-if="profile.role==='Mentee'">
+            <!-- <div class="form-group">
               <label for="name">Name</label>
               <input type="text" id="name" v-model="profile.name" required />
-            </div>
+            </div> -->
       
-            <!-- Email -->
+            <!-- Email
             <div class="form-group">
               <label for="email">Email</label>
               <input type="email" id="email" v-model="profile.email" required />
-            </div>
+            </div> -->
 
             <div class="form-group">
                 <label for="demographic">Demographic</label>
@@ -92,16 +92,21 @@
                     {{ interest }}
                 </button>
                 </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <input type="text" id="bio" v-model="profile.bio" />
+                </div>
             </div>
             <button @click="toggleNext">Back</button>
             <button type="submit">Submit</button>
         </div>
-        <div v-else-if="selectedRole==='Mentor'">
+        <div v-else-if="profile.role==='Mentor'">
             <div v-if="isMentorNext">
                 <h3>I am a...</h3>
                 
                 <div class="role-choice">
-                    <select id="role" v-model="selectedMentorRole" required>
+                    <select id="role" v-model="profile.dbRole" required>
                         <option disabled value="">Please select your role</option>
                         <option>Professional</option>
                         <option>Current Student</option>
@@ -109,22 +114,29 @@
                     </select>
             
                 </div>
-                <button @click="toggleMentorNext" :disabled="selectedMentorRole === ''">Next</button>
+                <button @click="toggleMentorNext" :disabled="profile.dbRole === ''">Next</button>
             </div>
-            <div v-else-if="selectedMentorRole !== ''">
-                <div class="form-group">
+            <div v-else-if="profile.dbRole !== ''">
+                <!-- <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" v-model="profile.name" required />
-                </div>
+                </div> -->
         
                 <!-- Email -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" v-model="profile.email" required />
                 </div>
-        
+         -->
+                <div class="form-group">
+                    <label for="demographic">Demographic</label>
+                    <select v-model="demographic" placeholder="Select" required>
+                        <option disabled value="">Please select your demographic</option>
+                        <option v-for="option in demographics" :value="option">{{ option }}</option>
+                    </select> 
+                </div>
                 <!-- College -->
-                <div v-if="selectedMentorRole==='Current Student' ||selectedMentorRole==='Alumni'" class="form-group">
+                <div v-if="profile.dbRole==='Current Student' ||profile.dbRole==='Alumni'" class="form-group">
                 <label for="college">College</label>
                 <select id="college" v-model="profile.college" required>
                     <option disabled value="">Please select your college</option>
@@ -134,22 +146,22 @@
                 </select>
                 </div>
       
-                <div v-if="selectedMentorRole==='Current Student' ||selectedMentorRole==='Alumni'" class="form-group">
+                <div v-if="profile.dbRole==='Current Student' ||profile.dbRole==='Alumni'" class="form-group">
                 <label for="major">Major</label>
                 <input type="text" id="major" v-model="profile.major" />
                 </div>
       
-                <div v-if="selectedMentorRole==='Professional'" class="form-group">
+                <div v-if="profile.dbRole==='Professional'" class="form-group">
                     <label for="company">Company</label>
                     <input type="text" id="company" v-model="profile.company" />
                 </div>
 
-                <div v-if="selectedMentorRole==='Professional'" class="form-group">
+                <div v-if="profile.dbRole==='Professional'" class="form-group">
                     <label for="title">Job Title</label>
                     <input type="text" id="title" v-model="profile.title" />
                 </div>
 
-                <div v-if="selectedMentorRole==='Professional'" class="form-group">
+                <div v-if="profile.dbRole==='Professional'" class="form-group">
                     <label for="yearsOfEx">Years of Experience</label>
                     <input type="number" id="yearsOfEx" v-model="profile.yearsOfEx" />
                 </div>
@@ -187,6 +199,11 @@
                         {{ interest }}
                     </button>
                 </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <input type="text" id="bio" v-model="profile.bio" />
+                </div>
             </div>
             <button @click="toggleMentorNext">Back</button>
             <button type="submit">Submit</button>
@@ -202,6 +219,7 @@
   <script setup>
     import { reactive, ref } from 'vue';
     import { database, set, get, ref as fireRef } from '../firebase';
+    import { update } from 'firebase/database';
   
   const profile = reactive({
     name: '',
@@ -210,8 +228,10 @@
     college: '',
     major: '',
     demographic: '',
+    role: "",
+    dbRole: "", 
+    bio: "",
     interests: [],
-    specialty: undefined,
     company: undefined,
     title: undefined,
     yearsOfEx: undefined
@@ -219,7 +239,7 @@
   const isNext = ref(true);
   const selectedRole = ref("");
   const isMentorNext = ref(true);
-  const selectedMentorRole = ref("");
+//   const profile.dbRole = ref("");
   
   const colleges = [
     "College of Art and Design",
@@ -256,8 +276,9 @@
     "Other (with a field to specify)"
   ]);
   const props = defineProps({
-    toggleProfile: Function  
-    }); 
+    toggleProfile: Function,
+    userObj: Object, 
+}); 
 
     function addInterest() {
     if (newInterest.value && !profile.interests.includes(newInterest.value)) {
@@ -279,34 +300,70 @@
 
   function submitForm() {
     props.toggleProfile();
-    writeUserData("user", profile.name, profile.email, profile.role)
+    // writeUserData("user", profile.name, profile.email, profile.role)
+    uploadUserProfile(profile).then(() => {
+        console.log("uploaded successfully").catch((error) => {
+      console.error('Error saving profile:', error);
+    });
+        
+    })
     console.log('Profile submitted:', profile);
 
   }
   function toggleNext() {
     isNext.value = !isNext.value;
+    console.log("in next: ", props.userObj.name);
+    
   }
 
   function toggleMentorNext() {
     isMentorNext.value = !isMentorNext.value;
   }
 
-  const db = database;
+//   async function writeUserData(userId, name, email, role) {
+//     const userRef = fireRef(db, `users/${email.replaceAll('.', '_')}`);
 
-  async function writeUserData(userId, name, email, role) {
-    const userRef = fireRef(db, `users/${email.replaceAll('.', '_')}`);
+//     try {
+//       await set(userRef, {
+//         name: name,
+//         email: email,
+//         role: role,
+//       });
+//       console.log('created success!');
+//     } catch(error) {
+//       console.error(error);
+//     }
+//   }]
+    async function uploadUserProfile(profile) {
+        const userRef = fireRef(database, `users/${props.userObj.email.replaceAll('.', '_')}`);
 
-    try {
-      await set(userRef, {
-        name: name,
-        email: email,
-        role: role,
-      });
-      console.log('created success!');
-    } catch(error) {
-      console.error(error);
+        try {
+            const snapshot = await get(userRef);
+
+            if (snapshot.exists()) {
+                // User exists, update only the specified fields
+                await update(userRef, {
+                    role: profile.role || "",
+                    college: profile.college || "",
+                    major: profile.major || "",
+                    demographic: profile.demographic || "",
+                    interests: profile.interests || [],
+                    specialty: profile.specialty || null,
+                    dbRole: profile.dbRole || null,
+                    bio: profile.bio || "",
+                    company: profile.company || null,
+                    title: profile.title || null,
+                    yearsOfEx: profile.yearsOfEx || null,
+                });
+                console.log('User profile updated successfully.');
+            } else {
+                console.log('User does not exist.');
+            }
+        } catch (error) {
+            console.error('Failed to update user profile:', error);
+        }
     }
-  }
+
 
   </script>
   

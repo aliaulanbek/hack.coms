@@ -7,7 +7,7 @@ import Profile from './components/Profile.vue';
 
 import { ref } from 'vue';
 
-const isEditProfile = ref(false);
+const isEditProfile = ref(true);
 
 const isMessaging = ref(false);
 
@@ -42,7 +42,7 @@ const props = defineProps({
     </div>
 
     <div v-if="isEditProfile">
-        <EditProfile :toggleProfile="toggleEditProfile"></EditProfile>
+        <EditProfile :userObj="user" :toggleProfile="toggleEditProfile"></EditProfile>
     </div>
   </div>
 </template>

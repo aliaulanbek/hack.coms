@@ -4,6 +4,7 @@
         <div class="brand">Mentor Database</div>
       
         <div class="nav-options">
+          <button @click="chooseDb('all')">All</button>
           <button @click="chooseDb('student')">Students</button>
           <button @click="chooseDb('alumni')">Alumni</button>
           <button @click="chooseDb('professional')">Professionals</button>
@@ -50,15 +51,14 @@
         </div>
       </div>
 
-      <div class="buttons">
+      <!-- <div class="buttons">
         <button @click="clearFilters" class="clear">Clear Filters</button>
         <button @click="search" class="search">Search</button>
-      </div>
+      </div> -->
     </div>
 
     <div class="box database">
-      <p>que</p>
-      <MentorList></MentorList>
+      <MentorList :mentors="filteredMentors"></MentorList>
     </div>
 
   </div>
@@ -66,7 +66,10 @@
 
 <script setup>
 
-  import { ref } from 'vue';
+  import { onBeforeMount, ref, computed, onMounted} from 'vue';
+  import { ref as fireRef, get, query, orderByChild, equalTo } from 'firebase/database';
+  import { database as db } from '../firebase';
+
   import MentorList from './MentorList.vue';
   // filters:
   const name = ref("");
@@ -78,7 +81,7 @@
   const filters = ref([name, areaOfInterest, college, company, field, demographic])
 
   const areasOfInterest = ref(["Academic Development", "Career Development", "Mock Interview", "Resume Review", "Personal Experiences"])
-  const database = ref("student");
+  const database = ref("all");
   const demographics = ref([
     "African American / Black",
     "Hispanic / Latino",
@@ -102,18 +105,56 @@
     "Golisano Institute for Sustainability",
     "School of Individualized Study"
   ]);
+  let mentorsList = ref([]);
+
+  const filteredMentors = computed(() => {
+    return mentorsList.value.filter(mentor => {
+      return (
+        (name.value === "" || mentor.name.toLowerCase().includes(name.value.toLowerCase())) &&
+        (areaOfInterest.value === "" || mentor.areaOfInterest.toLowerCase().includes(areaOfInterest.value.toLowerCase())) &&
+        (college.value === "" || mentor.college.toLowerCase().includes(college.value.toLowerCase())) &&
+        (company.value === "" || mentor.company.toLowerCase().includes(company.value.toLowerCase())) &&
+        (field.value === "" || mentor.field.toLowerCase().includes(field.value.toLowerCase())) &&
+        (demographic.value === "" || mentor.demographic.toLowerCase().includes(demographic.value.toLowerCase())) && (mentor.dbRole && (mentor.dbRole.toLowerCase().includes(database.value) || database.value === 'all'))
+      );
+    });
+  });
+
+  onMounted(() => {
+    getMentors().then((data) => {
+      console.log("called get mentors: ", data);
+    })
+  })
 
   const chooseDb = (value) => {
     database.value = value;
+    console.log("mentors: ", filteredMentors.value);
+    
   }
 
-  const clearFilters = () => {
-    console.log(filters.value);
-    
-    filters.value.forEach(val => {
-      val.value = "";
-    })
+  // Function to retrieve all users with role "mentor"
+  async function getMentors() {
+      const usersRef = fireRef(db, 'users');
+      
+      // Create a query to filter users by role
+      const mentorsQuery = query(usersRef, orderByChild('role'), equalTo('Mentor'));
+
+      try {
+          const snapshot = await get(mentorsQuery);
+
+          if (snapshot.exists()) {
+              // Convert snapshot data to an array of mentors
+              mentorsList.value = Object.values(snapshot.val());
+              console.log('Mentors fetched successfully:', mentorsList.value);
+          } else {
+              console.log('No mentors found.');
+              mentorsList.value = [];
+          }
+      } catch (error) {
+          console.error('Error fetching mentors:', error);
+      }
   }
+
 </script>
 
 <style scoped>
