@@ -1,23 +1,25 @@
 <script setup>
-import GoogleSignIn from './components/GoogleSignIn.vue';
+
 import ChatArea from './components/ChatArea.vue';
 import BrowseArea from './components/BrowseArea.vue';
 import MessageArea from './components/MessageArea.vue';
+import SignInPage from './components/SignInPage.vue';
 
 import { ref } from 'vue';
 import Profile from './components/Profile.vue';
 import EditProfile from './components/EditProfile.vue';
 
 const isMessaging = ref(true);
-const signedIn = ref(false);
-const isEdit = ref(true);
+let signedIn = ref(false);
+let currentUser = ref(null)
 
 function toggleMessage() {
   isMessaging.value = !isMessaging.value;
 }
 
-function toggleEditProfile() {
-  isEdit.value = !isEdit.value;
+function signIn(user) {
+  currentUser.value = user;
+  signedIn.value = true;
 }
 </script>
 
@@ -36,7 +38,7 @@ function toggleEditProfile() {
   <div v-else-if="isEdit">
     <EditProfile></EditProfile>
   </div>
-  <div v-if="signedIn">
+  <div v-else>
     <h1>Sign in here</h1>
   </div>
 </template>
